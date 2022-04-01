@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet } from "react-native";
 
-import MyTitle from "../../atoms/Title/MyTitle";
-import MyImage from "../../atoms/images/MyImage";
-import MyDate from "../../atoms/Date/MyDate";
-import MyLogo from "../../atoms/Logo/MyLogo";
+import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../../atoms/Atom"
 
 
 class InfoEvent extends Component {
@@ -36,6 +33,7 @@ class InfoEvent extends Component {
                     </View>
                     <MyLogo logoName='information-circle-outline' logoSize={24} logoColor='black'/>
                 </View>
+                <MyInput/>
             </View>
         )
     }    

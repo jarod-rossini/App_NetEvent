@@ -16,7 +16,6 @@ class Catégories extends Component{
             })
             .then((result) => {
                 this.setState({title: result})
-                console.log(result['hydra:member'][0])
             })
     }
 
