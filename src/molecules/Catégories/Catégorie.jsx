@@ -1,31 +1,62 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 
 import MyTitle from "../../atoms/Title/MyTitle";
 import MyImage from "../../atoms/images/MyImage";
 
-class Catégories extends Component{
-    state = {
-        title: {}
+const Catégories = () =>{
+
+    const [data, setData] = useState([]);
+    const [tag, setTag] = useState([]);
+    const [nameTag, setNameTag] = useState([]);
+
+    const getInfoCategorie = () => {
+        fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            setData(data)
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     }
 
-    componentDidMount(){
-        fetch('https://jeremy-dejoux.students-laplateforme.io/api/events?page=1')
-            .then((response) => {
-                return response.json()
-            })
-            .then((result) => {
-                this.setState({title: result})
-            })
+    const getInfoTag = () => {
+        fetch('https://jeremy-dejoux.students-laplateforme.io'+data.eventTags)
+        .then((response) => response.json())
+        .then((data2) => {
+            console.log(data2)
+            setTag(data2)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
     }
 
-    render() {
-        return (
-            <View>
-                <MyTitle title={'Test'}/>
-            </View>
-        )
+    const getNameTag = () => {
+        fetch('https://jeremy-dejoux.students-laplateforme.io'+tag.tags)
+        .then((response) => response.json())
+        .then((data3) => {
+            console.log(data3)
+            setNameTag(data3)
+        })
+        .catch((error) => {
+            console.log(error)
+        });
     }
+
+    useEffect(() => {
+        getInfoCategorie();
+        getInfoTag();
+        getNameTag();
+      }, []);
+
+    return(
+        <View>
+            <MyTitle title={nameTag.title}/>
+        </View>
+    )
 }
 
 export default Catégories

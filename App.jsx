@@ -5,16 +5,13 @@ import InfoEvent from './src/molecules/InfoEvent/InfoEvent';
 import Catégories from './src/molecules/Catégories/Catégorie';
 
 
-
-class App extends Component {
-  render() {
-    return (
-      <SafeAreaView style={styles.AndroidSafeArea}>
-        <InfoEvent/>
-        <Catégories/>
-      </SafeAreaView>    
-    );
-  }
+const App = () => {
+  return (
+    <SafeAreaView style={styles.AndroidSafeArea}>
+      <InfoEvent/>
+      <Catégories/>
+    </SafeAreaView>    
+  );
 }
 
 const styles = StyleSheet.create({
@@ -25,4 +22,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default App
+export default App;

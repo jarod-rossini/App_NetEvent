@@ -1,42 +1,41 @@
-import React, { Component } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { View, StyleSheet } from "react-native";
 
 import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../../atoms/Atom"
 
 
-class InfoEvent extends Component {
+const InfoEvent = () => {
 
-    state = {
-        title: {}
-    }
+    const [data, setData] = useState([]);
 
-    componentDidMount(){
+    const getInfoEvent = () => {
         fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
-            .then((response) => {
-                return response.json()
-            })
-            .then((result) => {
-                this.setState({title: result})
-                console.log(result)
-            })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data.dateStart)
+            console.log(data.fileUrl)
+            setData(data)
+        })
+        .catch((error) => {
+            console.error(error);
+        });
     }
+    
+    useEffect(() => {
+        getInfoEvent();
+      }, []);
 
-    render() {
-        return (
-            <View>
-                <MyImage/>
-                <View style={styles.InfoEvent}>
-                    <MyLogo logoName='heart-outline' logoSize={24} logoColor='black'/>
-                    <View style={styles.nameEvent}>
-                        <MyTitle title={this.state.title.name}/>
-                        <MyDate date_event={new Date(this.state.title.dateStart).toLocaleDateString('fr-FR')}/>
-                    </View>
-                    <MyLogo logoName='information-circle-outline' logoSize={24} logoColor='black'/>
-                </View>
-                <MyInput/>
+    return (
+        <View>            
+            <MyImage url_image={'https://jeremy-dejoux.students-laplateforme.io'+data.fileUrl}/>
+            <View style={styles.InfoEvent}>
+                <MyLogo logoName='heart-outline' logoSize={24} logoColor='black'/>
+                <MyLogo logoName='information-circle-outline' logoSize={24} logoColor='black'/>
+                <MyTitle title={data.content}/>
+                <MyDate date_event={data.dateStart}/>
             </View>
-        )
-    }    
+        </View>
+    );
 }
 
 export default InfoEvent;

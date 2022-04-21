@@ -2,9 +2,9 @@ import React from 'react'
 import { StyleSheet, View, Image } from 'react-native';
 
 
-const MyImage = () => {
+const MyImage = ({url_image}) => {
  return (
-        <Image style={styles.MyImage} source = {require('../../assets/Japan.jpg')} />
+        <Image style={styles.MyImage} source={{uri:url_image}} />
  )
 }
 
