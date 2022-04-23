@@ -3,13 +3,15 @@ import { StyleSheet, View, Platform, StatusBar, SafeAreaView } from 'react-nativ
 
 import InfoEvent from './src/molecules/InfoEvent/InfoEvent';
 import Catégories from './src/molecules/Catégories/Catégorie';
+import CreateEvent from './src/pages/CreateEvent';
 
 
 const App = () => {
   return (
     <SafeAreaView style={styles.AndroidSafeArea}>
-      <InfoEvent/>
-      <Catégories/>
+      {/* <InfoEvent/>
+      <Catégories/> */}
+      <CreateEvent/>
     </SafeAreaView>    
   );
 }
