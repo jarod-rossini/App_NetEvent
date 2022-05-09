@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 export default CreateEventScreen = () => {
   const navigation= useNavigation();
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'black' }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
         <Text>Create Event screen</Text>
         <Button
           title="Go to Details"
