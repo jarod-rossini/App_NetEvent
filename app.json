@@ -1,5 +1,6 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "netevent",
     "slug": "netevent",
     "version": "1.0.0",
@@ -7,6 +8,15 @@
     "icon": "./src/assets/icon.png",
     "splash": {
       "image": "./src/assets/splash.png",
+=======
+    "name": "appMobile",
+    "slug": "appMobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+>>>>>>> repo-a/main
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,12 +31,23 @@
     },
     "android": {
       "adaptiveIcon": {
+<<<<<<< HEAD
         "foregroundImage": "./src/assets/adaptive-icon.png",
+=======
+        "foregroundImage": "./assets/adaptive-icon.png",
+>>>>>>> repo-a/main
         "backgroundColor": "#FFFFFF"
       }
     },
     "web": {
+<<<<<<< HEAD
       "favicon": "./src/assets/favicon.png"
     }
   }
 }
+=======
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
+>>>>>>> repo-a/main
