@@ -1,8 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-
-
 const SignInScreen = () => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');

@@ -1,38 +1,53 @@
-import * as React from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './src/screens/HomeScreen';
 import axios from 'axios';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native'
+import DetailScreen from './src/screens/DetailScreen';
+import { AuthContext } from './src/context/context';
+import React, { useContext, useState } from "react";
 
-
-const AuthContext = React.createContext();
 const Stack = createNativeStackNavigator();
+
+function HomeScreen() {
+
+    const { signOut } = useContext(AuthContext);
+
+    return (
+        <View>
+            <Text>HomeScreen</Text>
+            <Button
+                title="Disconnect"
+                onPress={() => signOut()}
+            />
+        </View>
+    );
+}
+
 
 function SignInScreen() {
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
-  
+
     const { signIn } = React.useContext(AuthContext);
-  
+
     return (
-      <View>
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <Button title="Sign in" onPress={() => signIn({ username, password })} />
-      </View>
+        <View>
+            <TextInput
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+            />
+            <TextInput
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+            />
+            <Button title="Sign in" onPress={() => signIn({ username, password })} />
+        </View>
     );
-  }
+}
 
 export default function App({ navigation }) {
     const [state, dispatch] = React.useReducer(
@@ -66,23 +81,17 @@ export default function App({ navigation }) {
     );
 
     React.useEffect(() => {
-        // Fetch the token from storage then navigate to our appropriate place
         const bootstrapAsync = async () => {
             let userToken;
+            console.log(userToken);
 
             try {
                 userToken = await SecureStore.getItemAsync('userToken');
-                console.log(userToken)
+                console.log(userToken);
             } catch (e) {
                 console.log("Erreur dans la recuperation du token")
             }
 
-
-
-            // After restoring token, we may need to validate it in production apps
-
-            // This will switch to the App screen or Auth screen and this loading
-            // screen will be unmounted and thrown away.
             dispatch({ type: 'RESTORE_TOKEN', token: userToken });
         };
 
@@ -92,46 +101,38 @@ export default function App({ navigation }) {
     const authContext = React.useMemo(
         () => ({
             signIn: async (data) => {
-                // In a production app, we need to send some data (usually username, password) to server and get a token
-                // We will also need to handle errors if sign in failed
-                // After getting token, we need to persist the token using `SecureStore`
-                // In the example, we'll use a dummy token
-
-                const getToken = async () => {
-                    try {
-                        const response = await axios.post("https://jeremy-dejoux.students-laplateforme.io/api/login", {
-                                username: "emmanuel@hotmail.fr",
-                                password: "0000",
-                            }, {
-                                headers: {
-                                    'content-type': 'application/json'
-                                }
-                            }
-                        )
-                        const data = await response.data
-                        return data
-                    } catch (error) {
-                        console.log("Erreur dans getToken")
-                    }
-                }  
-                
                 async function save(key, value) {
                     await SecureStore.setItemAsync(key, value);
                 }
 
-                getToken().then(data => {
-                    token = data.token
-                    tokenStringified = JSON.stringify(token)
-                    save('userToken', tokenStringified)
-                    dispatch({ type: 'SIGN_IN', token: tokenStringified });
-                })
+                try {
+                    const response = await axios.post("https://jeremy-dejoux.students-laplateforme.io/api/login", {
+                        username: data.username,
+                        password: data.password,
+                    }, {
+                        headers: {
+                            'content-type': 'application/json'
+                        }
+                    }
+                    )
+                    const data = await response.data
+                    return data
+                        .then(data => {
+                            token = data.token
+                            tokenStringified = JSON.stringify(token)
+                            save('userToken', tokenStringified)
+                            dispatch({ type: 'SIGN_IN', token: tokenStringified });
+                        })
+                } catch (error) {
+                    console.log("Erreur dans getToken")
+                }
+
             },
-            signOut: () => dispatch({ type: 'SIGN_OUT' }),
+            signOut: () => {
+                SecureStore.deleteItemAsync("userToken");
+                dispatch({ type: 'SIGN_OUT' });
+            },
             signUp: async (data) => {
-                // In a production app, we need to send user data to server and get a token
-                // We will also need to handle errors if sign up failed
-                // After getting token, we need to persist the token using `SecureStore`
-                // In the example, we'll use a dummy token
 
                 dispatch({ type: 'SIGN_IN', token: 'dummy-auth-token' });
             },
@@ -144,10 +145,16 @@ export default function App({ navigation }) {
             <NavigationContainer>
                 <Stack.Navigator>
                     {state.userToken == null ? (
-                        <Stack.Screen name="SignIn" component={SignInScreen} />
-                        ) : (
+                        // Screens for logged in users
+                        <Stack.Group>
+                            <Stack.Screen name="SignIn" component={SignInScreen} />
+                        </Stack.Group>
+                    ) : (
+                        <Stack.Group>
                             <Stack.Screen name="Home" component={HomeScreen} />
-                        )}
+                            <Stack.Screen name="Detail" component={DetailScreen} />
+                        </Stack.Group>
+                    )}
                 </Stack.Navigator>
             </NavigationContainer>
         </AuthContext.Provider>
