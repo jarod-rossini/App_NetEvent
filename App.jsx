@@ -9,6 +9,7 @@ import ConnectionScreen from "./src/screens/ConnectionScreen";
 import FavorisScreen from "./src/screens/FavorisScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/details/DetailsScreen";
+import ChangeMdpScreen from "./src/screens/ChangeMdpScreen";
 import {
   MaterialCommunityIcons,
   AntDesign,
@@ -18,7 +19,6 @@ import {
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen(dispatch) {
-  console.log(dispatch)
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -151,8 +151,8 @@ function ProfilStackScreen(dispatch) {
         }}
       />
       <ProfilStack.Screen
-        name="Details"
-        component={DetailsScreen}
+        name="ChangeMdp"
+        component={ChangeMdpScreen}
         options={{
           headerStyle: { backgroundColor: "black" },
           headerTitleStyle: {
@@ -197,7 +197,6 @@ function ConnectionStackScreen(dispatch) {
 const Tab = createBottomTabNavigator();
 export default function App() {
   const [isSignedIn, dispatch] = React.useState(false);
-  console.log('1',dispatch)
 
   return (
     <NavigationContainer>

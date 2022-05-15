@@ -6,14 +6,14 @@ import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../../atoms/Atom"
 
 const InfoEvent = () => {
 
-    const [data, setData] = useState([]);
+    const [data, setData] = React.useState([]);
 
     const getInfoEvent = () => {
         fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data.dateStart)
-            console.log(data.fileUrl)
+
+
             setData(data)
         })
         .catch((error) => {

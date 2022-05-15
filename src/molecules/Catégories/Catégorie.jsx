@@ -12,7 +12,6 @@ const Catégories = () =>{
         fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
         .then((response) => response.json())
         .then((data) => {
-            console.log(data)
             setData(data)
         })
         .catch((error) => {
