@@ -10,6 +10,7 @@ import FavorisScreen from "./src/screens/FavorisScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/details/DetailsScreen";
 import ChangeMdpScreen from "./src/screens/ChangeMdpScreen";
+import ChangeCityScreen from "./src/screens/ChangeCityScreen";
 import {
   MaterialCommunityIcons,
   AntDesign,
@@ -33,6 +34,17 @@ function HomeStackScreen(dispatch) {
           },
         }}
       ></HomeStack.Screen>
+      <HomeStack.Screen
+        name="City"
+        component={ChangeCityScreen}
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
       <HomeStack.Screen
         name="Details"
         component={DetailsScreen}

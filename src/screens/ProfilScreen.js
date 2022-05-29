@@ -6,7 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TextInput,
-  Image
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,8 +15,6 @@ export default ProfilScreen = ({ dispatch }) => {
 
   const [token, setToken] = React.useState([]);
   const [me, setMe] = React.useState([]);
-  const [text, onChangeText] = React.useState("Useless Text");
-  const [number, onChangeNumber] = React.useState(null);
 
   //Obj of data to send in future like a dummyDb
   const data = {
@@ -69,18 +67,14 @@ export default ProfilScreen = ({ dispatch }) => {
     requeteMe();
   }
   return (
-    <View
-      style={styles.view}
-    >
+    <View style={styles.view}>
       <Image
         source={{
           uri: "https://img2.freepng.fr/20180802/xaw/kisspng-clip-art-portable-network-graphics-computer-icons-user-staff-person-man-profile-boss-circle-svg-png-5b62ed560cb369.529707841533209942052.jpg",
         }}
         style={styles.image}
       />
-      <Text
-        style={styles.text}
-      >{me.email}</Text>
+      <Text style={styles.text}>{me.email}</Text>
       <Button
         title="changer de mot de passe"
         onPress={() =>
@@ -90,7 +84,6 @@ export default ProfilScreen = ({ dispatch }) => {
           })
         }
       />
-
     </View>
   );
 };
@@ -102,14 +95,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
   },
-  image:{
-      width: 100,
-      height: 100,
-      borderRadius: 100/2,
-      marginBottom: 30
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 100 / 2,
+    marginBottom: 30,
   },
   text: {
-    marginBottom: 15
-  }
-
-})
+    marginBottom: 15,
+  },
+});

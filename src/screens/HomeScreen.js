@@ -13,6 +13,11 @@ export default HomeScreen = () => {
         backgroundColor: "black",
       }}
     >
+      <Text>City Screen</Text>
+      <Button
+        title="City"
+        onPress={() => navigation.navigate("City")}
+      />
       <Text>Home screen</Text>
       <Button
         title="Details"
