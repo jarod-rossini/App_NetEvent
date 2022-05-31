@@ -1,14 +1,10 @@
-import * as React from "react";
-import { View, Text, Button, TextInput } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from '../context/context.js';
-import { useContext, useState } from "react";
 
-export default ConnectionScreen = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+function SignInScreen() {
+    const [username, setUsername] = React.useState('');
+    const [password, setPassword] = React.useState('');
 
-  const { signIn }  = useContext(AuthContext);
+    const { signIn } = React.useContext(AuthContext);
+
     return (
         <View>
             <TextInput
@@ -25,4 +21,4 @@ export default ConnectionScreen = () => {
             <Button title="Sign in" onPress={() => signIn({ username, password })} />
         </View>
     );
-};
+}
