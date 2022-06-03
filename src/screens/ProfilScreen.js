@@ -9,63 +9,35 @@ import {
   Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/context.js";
+import { useContext, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 
-export default ProfilScreen = ({ dispatch }) => {
+export default ProfilScreen = () => {
   const navigation = useNavigation();
 
-  const [token, setToken] = React.useState([]);
-  const [me, setMe] = React.useState([]);
+  const { signOut } = useContext(AuthContext);
+  const [id, setId] = useState([]);
+  const [email, setEmail] = useState([]);
 
-  //Obj of data to send in future like a dummyDb
-  const data = {
-    username: "emmanuel@hotmail.fr",
-    password: "0000",
-  };
-
-  //POST request with body equal on data in JSON format
-  const requete = () => {
-    fetch("https://jeremy-dejoux.students-laplateforme.io/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      //Then with the data from the response in JSON...
-      .then((data) => {
-        setToken(data);
-      })
-      //Then with the error genereted...
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-  React.useEffect(() => {
-    requete();
-  }, []);
-
-  if (token != "undefined") {
-    const requeteMe = () => {
-      fetch("https://jeremy-dejoux.students-laplateforme.io/api/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.token}`,
-        },
-      })
-        .then((response) => response.json())
-        //Then with the data from the response in JSON...
-        .then((data) => {
-          setMe(data);
-        })
-        //Then with the error genereted...
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    };
-    requeteMe();
+  async function getValueForEmail() {
+    let result = await SecureStore.getItemAsync("emailUser");
+    if (result) {
+      setEmail(result)
+    }
   }
+
+  async function getValueForId() {
+    let result = await SecureStore.getItemAsync("idUser");
+    if (result) {
+      setId(result)
+    }
+  }
+
+  getValueForEmail()
+  getValueForId()
+  
+
   return (
     <View style={styles.view}>
       <Image
@@ -74,16 +46,17 @@ export default ProfilScreen = ({ dispatch }) => {
         }}
         style={styles.image}
       />
-      <Text style={styles.text}>{me.email}</Text>
+      <Text style={styles.text}>{email}</Text>
       <Button
         title="changer de mot de passe"
         onPress={() =>
           navigation.navigate("ChangeMdp", {
-            userId: me.id,
-            userEmail: me.email,
+            userId: id, 
+            userEmail: email,
           })
         }
       />
+      <Button title="Disconnect" onPress={() => signOut()} />
     </View>
   );
 };

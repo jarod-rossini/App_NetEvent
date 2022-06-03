@@ -1,68 +1,81 @@
 import * as React from "react";
-import { View, Text, Button, StyleSheet, TextInput, SafeAreaView } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  StyleSheet,
+  TextInput,
+  SafeAreaView,
+} from "react-native";
+import * as SecureStore from "expo-secure-store";
+import { useNavigation } from "@react-navigation/native";
 
 export default ChangeMdpScreen = ({ route }) => {
   const { userId, userEmail } = route.params;
-  const [password, onChangePassword] = React.useState('');
-  const [newPassword, onChangeNewPassword] = React.useState('');
-  const [verifPassword, setVerifPassword] = React.useState('');
+  const [password, onChangePassword] = React.useState("");
+  const [newPassword, onChangeNewPassword] = React.useState("");
 
   const changeMdp = () => {
-    if (password == '' || newPassword == '' ) {
-      console.log('password or newpassword null')
-      return null
+    if (password == "" || newPassword == "") {
+      alert("Veuillez remplir tous les champs");
+
+      return;
     }
-    console.log('on passe le remplissage')
+
     const dataPassword = {
       username: userEmail,
-      password: password
+      password: password,
     };
-
-    
-      fetch("https://jeremy-dejoux.students-laplateforme.io/api/login", {
+    let isGoodPassword = fetch(
+      "https://jeremy-dejoux.students-laplateforme.io/api/login",
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(dataPassword),
-     })
-      .then((response) => response.json())
-      //Then with the data from the response in JSON...
-      .then((data) => {
-        console.log('token', data?.token)
-        setVerifPassword(true)
-      })
-      //Then with the error genereted...
-      .catch((error) => {
-        console.log(" le mdp n'est pas bon")
-      });
-
-    
-    if (verifPassword === true) {
-      console.log('on passe le verif password')
-      const dataNewPassword = {
-        password: newPassword
       }
-      console.log("https://jeremy-dejoux.students-laplateforme.io/api/users/" + userId)
-      fetch("https://jeremy-dejoux.students-laplateforme.io/api/users/" + userId, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/merge-patch+json",
-        },
-        body: JSON.stringify(dataNewPassword),
-      })
-        .then((response) => response.json())
-        //Then with the data from the response in JSON...
-        .then((data) => {
-          console.log(data)
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token == null) {
+          alert("Vous n'avez pas rentrer le bon mot de passe");
+          return false;
+        }
+        return true;
+      });
+      modifyPassword();
+      
+    async function modifyPassword() {
+      console.log("on rentre de la modifyPassword");
+
+      if ((await isGoodPassword) != true) {
+        return;
+      }
+      const dataNewPassword = {
+        password: newPassword,
+      };
+      fetch(
+        "https://jeremy-dejoux.students-laplateforme.io/api/users/" + userId,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/merge-patch+json",
+          },
+          body: JSON.stringify(dataNewPassword),
+        }
+      )
+        .then(() => {
+          onChangePassword("");
+          onChangeNewPassword("")
+          alert("Mot de passe modifié avec success")
         })
-        //Then with the error genereted...
         .catch((error) => {
           console.error("Error:", error);
         });
     }
-  }
-  
+  };
+
   return (
     <View
       style={{
@@ -88,15 +101,8 @@ export default ChangeMdpScreen = ({ route }) => {
           placeholder="new password"
           secureTextEntry
         />
-        <Button 
-          title="changer mot de passe"
-          onPress={changeMdp}
-        />
+        <Button title="changer mot de passe" onPress={changeMdp} />
       </SafeAreaView>
-      <Text>{newPassword}</Text>
-      <Text>{password}</Text>
-      <Text>{userId}</Text>
-      <Text>{userEmail}</Text>
     </View>
   );
 };

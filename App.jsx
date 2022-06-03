@@ -11,6 +11,7 @@ import HomeScreen from "./src/screens/HomeScreen";
 import DetailsScreen from "./src/details/DetailsScreen";
 import ChangeMdpScreen from "./src/screens/ChangeMdpScreen";
 import ChangeCityScreen from "./src/screens/ChangeCityScreen";
+import InscriptionScreen from "./src/screens/InscriptionScreen";
 import { AuthContext } from "./src/context/context";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
@@ -195,8 +196,8 @@ function ConnectionStackScreen(dispatch) {
         }}
       />
       <ConnectionStack.Screen
-        name="Details"
-        component={DetailsScreen}
+        name="Inscription"
+        component={InscriptionScreen}
         options={{
           headerStyle: { backgroundColor: "black" },
           headerTitleStyle: {
@@ -246,11 +247,9 @@ export default function App() {
   React.useEffect(() => {
     const bootstrapAsync = async () => {
       let userToken;
-      console.log("userToken1", userToken);
 
       try {
         userToken = await SecureStore.getItemAsync("userToken");
-        console.log("userToken", userToken);
       } catch (e) {
         console.log("Erreur dans la recuperation du token");
       }
@@ -263,10 +262,12 @@ export default function App() {
 
   const authContext = React.useMemo(
     () => ({
+      /* signIn: fonction qui permet de se connecter */
       signIn: async (data) => {
         async function save(key, value) {
           await SecureStore.setItemAsync(key, value);
         }
+        /* requete api pour le connection et retournant le token et refreshToken */
         const response = fetch(
           "https://jeremy-dejoux.students-laplateforme.io/api/login",
           {
@@ -283,11 +284,32 @@ export default function App() {
         )
           .then((response) => response.json())
           .then((data) => {
-            let token = data.token;
-
-            let tokenStringified = JSON.stringify(token);
-            save("userToken", tokenStringified);
-            dispatch({ type: "SIGN_IN", token: tokenStringified });
+            /* sauvegarde du token et refreshToken dans le SecureStore */
+            save("userRefreshToken", data.refresh_token);
+            save("userToken", data.token);
+            
+            dispatch({ type: "SIGN_IN", token: data.token });
+            SecureStore.getItemAsync("userToken")
+            .then((token) => {
+              /* console.log("token", token) */
+              /* requete api permettant de recupérer les informations de l'utilisateur */
+              const responses = fetch(
+                "https://jeremy-dejoux.students-laplateforme.io/api/me",
+                {
+                  method: "GET",
+                  headers: {
+                    Accept: "application/json",
+                    "Authorization": "Bearer " + token,
+                  },
+                }
+              )
+              .then((responses) => responses.json())
+              .then((result) => {
+                /* sauvegarde de l'email et de l'id de l'utilisateur dans le SecureStore */
+                save("emailUser", result.email);
+                save("idUser", result.id.toString());
+              })
+            })
           });
       },
       signOut: () => {
@@ -300,8 +322,6 @@ export default function App() {
     }),
     []
   );
-
-  const [isSignedIn, dispatche] = React.useState(false);
 
   return (
     <AuthContext.Provider value={authContext}>
