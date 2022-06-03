@@ -21,7 +21,6 @@ export default ChangeMdpScreen = ({ route }) => {
 
       return;
     }
-
     const dataPassword = {
       username: userEmail,
       password: password,
@@ -47,8 +46,6 @@ export default ChangeMdpScreen = ({ route }) => {
       modifyPassword();
       
     async function modifyPassword() {
-      console.log("on rentre de la modifyPassword");
-
       if ((await isGoodPassword) != true) {
         return;
       }

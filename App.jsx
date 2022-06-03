@@ -267,6 +267,7 @@ export default function App() {
         async function save(key, value) {
           await SecureStore.setItemAsync(key, value);
         }
+
         /* requete api pour le connection et retournant le token et refreshToken */
         const response = fetch(
           "https://jeremy-dejoux.students-laplateforme.io/api/login",
@@ -287,12 +288,10 @@ export default function App() {
             /* sauvegarde du token et refreshToken dans le SecureStore */
             save("userRefreshToken", data.refresh_token);
             save("userToken", data.token);
-            
+            console.log("token de la connexion", data.token)
             dispatch({ type: "SIGN_IN", token: data.token });
             SecureStore.getItemAsync("userToken")
             .then((token) => {
-              /* console.log("token", token) */
-              /* requete api permettant de recupérer les informations de l'utilisateur */
               const responses = fetch(
                 "https://jeremy-dejoux.students-laplateforme.io/api/me",
                 {
@@ -314,6 +313,9 @@ export default function App() {
       },
       signOut: () => {
         SecureStore.deleteItemAsync("userToken");
+        SecureStore.deleteItemAsync("userRefreshToken");
+        SecureStore.deleteItemAsync("emailUser");
+        SecureStore.deleteItemAsync("idUser");
         dispatch({ type: "SIGN_OUT" });
       },
       signUp: async (data) => {
