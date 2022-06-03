@@ -22,8 +22,10 @@ export default InscriptionScreen = ({ navigation }) => {
     }
 
     const inputValue = {
-      username: email,
-      roles: [],
+      email: email,
+      roles: [
+
+      ],
       password: password,
     };
 
@@ -39,7 +41,7 @@ export default InscriptionScreen = ({ navigation }) => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log('on passe')
+        console.log(data)
         if (data.email == null) {
           alert("error lors de l'enregistrement");
           return false;
@@ -74,6 +76,9 @@ export default InscriptionScreen = ({ navigation }) => {
         />
         <Button title="Inscription" onPress={inscription} />
       </SafeAreaView>
+      <Text>{email}</Text>
+      <Text>{password}</Text>
+      
     </View>
   );
 };
