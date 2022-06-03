@@ -9,20 +9,24 @@ import {
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../context/context.js";
+import { useContext, useState } from "react";
 
 export default InscriptionScreen = ({ navigation }) => {
-  const [email, onChangeEmail] = React.useState("");
-  const [password, onChangePassword] = React.useState("");
+  const [username, onChangeUsername] = useState("");
+  const [password, onChangePassword] = useState("");
+
+  const { signIn } = useContext(AuthContext);
 
   const inscription = () => {
-    if (email == "" || password == "") {
+    if (username == "" || password == "") {
       alert("Veuillez remplir tous les champs");
 
       return;
     }
 
     const inputValue = {
-      email: email,
+      email: username,
       roles: [
 
       ],
@@ -43,10 +47,10 @@ export default InscriptionScreen = ({ navigation }) => {
       .then((data) => {
         console.log(data)
         if (data.email == null) {
-          alert("error lors de l'enregistrement");
+          alert("Cette email existe déjà");
           return false;
         }
-        alert(data.email)
+        signIn({username, password})
         
       });
   };
@@ -63,8 +67,8 @@ export default InscriptionScreen = ({ navigation }) => {
       <SafeAreaView>
         <TextInput
           style={styles.input}
-          onChangeText={onChangeEmail}
-          value={email}
+          onChangeText={onChangeUsername}
+          value={username}
           placeholder="your email"
         />
         <TextInput
@@ -76,7 +80,7 @@ export default InscriptionScreen = ({ navigation }) => {
         />
         <Button title="Inscription" onPress={inscription} />
       </SafeAreaView>
-      <Text>{email}</Text>
+      <Text>{username}</Text>
       <Text>{password}</Text>
       
     </View>
