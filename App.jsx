@@ -14,10 +14,8 @@ import ChangeCityScreen from "./src/screens/ChangeCityScreen";
 import InscriptionScreen from "./src/screens/InscriptionScreen";
 import { AuthContext } from "./src/context/context";
 import * as SecureStore from "expo-secure-store";
-import axios from "axios";
 import {
   MaterialCommunityIcons,
-  AntDesign,
   Ionicons,
 } from "@expo/vector-icons";
 
@@ -285,10 +283,13 @@ export default function App() {
         )
           .then((response) => response.json())
           .then((data) => {
+            if (data.token == null) {
+              alert("email ou mot de passe incorect")
+              return false;
+            }
             /* sauvegarde du token et refreshToken dans le SecureStore */
             save("userRefreshToken", data.refresh_token);
             save("userToken", data.token);
-            console.log("token de la connexion", data.token)
             dispatch({ type: "SIGN_IN", token: data.token });
             SecureStore.getItemAsync("userToken")
             .then((token) => {
