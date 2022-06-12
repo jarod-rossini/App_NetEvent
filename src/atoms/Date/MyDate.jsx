@@ -1,6 +1,6 @@
 import { StyleSheet, Text } from 'react-native'
 
-const MyDateMyDate = ({date_event}) => {
+const MyDate = ({date_event}) => {
     return(
         <Text style={styles.StylesDate}>{date_event}</Text>
     )
