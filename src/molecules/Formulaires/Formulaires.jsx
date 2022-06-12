@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react'
 import { MyInput } from "../../atoms/Atom"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Picker } from "@react-native-picker/picker";
+import * as SecureStore from "expo-secure-store";
 
 
 const Formulaires = () => {
@@ -25,11 +26,31 @@ const Formulaires = () => {
 
     useEffect(() => {
         getTags();
+        getValueForToken()
+        getValueForId()
     }, []);
+
+    const [user, setUser] = useState([]);
+    const [token, setToken] = useState([]);
+
+    async function getValueForId() {
+        let result = await SecureStore.getItemAsync("idUser");
+        if (result){
+            setUser("api/users/" + result);
+        }
+    }
+
+    async function getValueForToken() {
+        let result = await SecureStore.getItemAsync("userToken");
+        if (result){
+            setToken(result);
+        }
+    }
     
+
+
     const [name, setName] = useState('Nom');
     const [content, setContent] = useState('Description');
-    const [user] = '/api/users/1';
     const [capacity, setCapacity] = useState('');
     const [dateStart, setDateStart] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
@@ -55,14 +76,14 @@ const Formulaires = () => {
             mode: 'no-cors',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTQwMzMzNDAsImV4cCI6MTY1NDAzNjk0MCwicm9sZXMiOlsic3RyaW5nIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZW1tYW51ZWxAaG90bWFpbC5mciJ9.F2jHswj1-zNT7AGewUwFkz0Qy51brrLYb8DXGEAGkohDHOY1pnJUr0xF4_SLkxKdfaGU9yM7vgP3T_6vf7GO_VluiAY3xHqoTjmNnTRw3xZMBvd-B6IVPU18YXDpLQNqikX9_le1iEtFbfanCkLslqVTJeTv8mR5kdC3V_oRRfo7dOWSGcu-hX3akQfruMVZcWRDYpt5AOfGGVrwb306T-bgZz1RhCyh9Uyk2kQ0drmjeQmu1vDow5UIY74cah0Vt6UqNV6qUl8KCGCQMjZzzY41UTms0nsWudYIFoE1WR-z85Fvcter6H_JsrddfSHh4ZyLD1zTxot3L7Tssh-Gew',
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTUwNDIyMTIsImV4cCI6MTY1NTA0NTgxMiwicm9sZXMiOlsic3RyaW5nIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZW1tYW51ZWxAaG90bWFpbC5mciJ9.GmrfpG_pk7Ek9CNikG9dnEGySw-gzM3c4aHB6K0IbB7odST1kCY7wRdiMQvqxQdw07Q8RPGC2UXZhPdr94ou9M0j4Vb1KMo7cGqUjsF6AOV15dcaMhKRhmks0RKOIno0TM554vR_BEiFeQJC57QPvaMwz2_AYbipmMQxasN6sim5OzkiXU_xvQiAoCpuiwP4NtykACUfvKADJDLd48pTv9UXA6EygRgoAvOeLgzGMJ4HG1oJcFHye0mDSDcNa5w2xT83Vi9UDPQ2qjn-bUJbddjAOAdmq68esAK9X4e4uhxZxoFSlIiZVvbReYpQ6DZjz5f7QKAvhZ5JK9ulMwGXUg',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(eventCreate)
         }).then((response) => response.json())
         .then((data) => {
-            console.log('new blog added');
-            console.log(name, content, user, capacity, dateStart, city, price, dateEnd, tags);
+            console.log(data);
+            console.log(name, content, user, capacity, dateStart, city, price, dateEnd);
             setIsPending(false);
         })
     }
