@@ -9,7 +9,7 @@ const Catégories = () =>{
     const [data, setData] = useState([]);
 
     const getInfoCategorie = () => {
-        fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
+        fetch('https://netevent-api.herokuapp.com/api/events/3')
         .then((response) => response.json())
         .then((data) => {
             setData(data)

@@ -9,7 +9,7 @@ const InfoEvent = () => {
     const [data, setData] = React.useState([]);
 
     const getInfoEvent = () => {
-        fetch('https://jeremy-dejoux.students-laplateforme.io/api/events/3')
+        fetch('https://netevent-api.herokuapp.com/api/events/3')
         .then((response) => response.json())
         .then((data) => {
 
@@ -27,7 +27,7 @@ const InfoEvent = () => {
 
     return (
         <View>            
-            <MyImage url_image={'https://jeremy-dejoux.students-laplateforme.io'+data.fileUrl}/>
+            <MyImage url_image={'https://netevent-api.herokuapp.com'+data.fileUrl}/>
             <View style={styles.InfoEvent}>
                 <MyLogo logoName='heart-outline' logoSize={24} logoColor='black'/>
                 <MyLogo logoName='information-circle-outline' logoSize={24} logoColor='black'/>

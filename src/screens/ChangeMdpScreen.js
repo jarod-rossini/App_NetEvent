@@ -26,7 +26,7 @@ export default ChangeMdpScreen = ({ route }) => {
       password: password,
     };
     let isGoodPassword = fetch(
-      "https://jeremy-dejoux.students-laplateforme.io/api/login",
+      "https://netevent-api.herokuapp.com/api/login",
       {
         method: "POST",
         headers: {
@@ -53,7 +53,7 @@ export default ChangeMdpScreen = ({ route }) => {
         password: newPassword,
       };
       fetch(
-        "https://jeremy-dejoux.students-laplateforme.io/api/users/" + userId,
+        "https://netevent-api.herokuapp.com/api/users/" + userId,
         {
           method: "PATCH",
           headers: {

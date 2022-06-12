@@ -265,7 +265,7 @@ export default function App() {
 
         /* requete api pour le connection et retournant le token et refreshToken */
         const response = fetch(
-          "https://jeremy-dejoux.students-laplateforme.io/api/login",
+          "https://netevent-api.herokuapp.com/api/login",
           {
             method: "POST",
             headers: {
@@ -291,7 +291,7 @@ export default function App() {
             SecureStore.getItemAsync("userToken")
             .then((token) => {
               const responses = fetch(
-                "https://jeremy-dejoux.students-laplateforme.io/api/me",
+                "https://netevent-api.herokuapp.com/api/me",
                 {
                   method: "GET",
                   headers: {

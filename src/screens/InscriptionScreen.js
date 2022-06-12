@@ -34,11 +34,12 @@ export default InscriptionScreen = ({ navigation }) => {
     };
 
     let createUser = fetch(
-      "https://jeremy-dejoux.students-laplateforme.io/api/users",
+      "https://netevent-api.herokuapp.com/api/users",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Accept': 'application/json'
         },
         body: JSON.stringify(inputValue),
       }
@@ -46,6 +47,7 @@ export default InscriptionScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.email == null) {
+          console.log(data);
           alert("Cette email existe déjà");
           return false;
         }
