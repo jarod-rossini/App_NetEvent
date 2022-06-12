@@ -1,9 +1,9 @@
 import * as React from "react";
 import { View, Text, Button } from "react-native";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 export default HomeScreen = () => {
-  const navigation= useNavigation();
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -14,15 +14,9 @@ export default HomeScreen = () => {
       }}
     >
       <Text>City Screen</Text>
-      <Button
-        title="City"
-        onPress={() => navigation.navigate("City")}
-      />
+      <Button title="City" onPress={() => navigation.navigate("City")} />
       <Text>Home screen</Text>
-      <Button
-        title="Details"
-        onPress={() => navigation.navigate("Details")}
-      />
+      <Button title="Details" onPress={() => navigation.navigate("Details")} />
     </View>
   );
 };
