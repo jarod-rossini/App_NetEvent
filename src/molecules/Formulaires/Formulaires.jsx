@@ -2,26 +2,54 @@ import { View, Text, Button } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { MyInput } from "../../atoms/Atom"
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { Picker } from "@react-native-picker/picker";
+
 
 const Formulaires = () => {
 
 
-    const [data, setData] = useState([]);
-    const [name, setName] = useState('default-name');
-    const [content, setContent] = useState('default-content');
-    const [user, setUser] = useState('/api/users/1');
-    const [capacity, setCapacity] = useState(5);
+    const [allTags, setAllTags] = useState('test');
+    const [tags, setTags] = useState('/api/tags/5')
+
+    const getTags = () => {
+        fetch ('https://netevent-api.herokuapp.com/api/tags', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            setAllTags(data)
+        })
+    }
+
+    useEffect(() => {
+        getTags();
+    }, []);
+    
+    const [name, setName] = useState('Nom');
+    const [content, setContent] = useState('Description');
+    const [user] = '/api/users/1';
+    const [capacity, setCapacity] = useState('');
     const [dateStart, setDateStart] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
-    const [city, setCity] = useState('Marseille');
-    const [price, setPrice] = useState(5);
+    const [city, setCity] = useState('Ville');
+    const [price, setPrice] = useState('');
+
+    const [isPending, setIsPending] = useState(false);
 
     const postEvent = (e) => {
         e.preventDefault();
-        setCapacity(parseInt(capacity));
-        setPrice(parseInt(price));
+        setIsPending(true);
+
         const eventCreate = {name, content, user, capacity, dateStart, dateEnd, city, price}
-        console.log(typeof capacity, typeof price);
+        Object.keys(eventCreate).map((key, index) => {
+            if (eventCreate[key].length == 0 || eventCreate[key] == ' ' || eventCreate[key] == '') {
+                alert(`Le champ ${key} ne peut pas être vide`);
+                return setIsPending(false);
+            }
+        })
+
         fetch('https://netevent-api.herokuapp.com/api/events/publisher', {
             method: 'post',
             mode: 'no-cors',
@@ -33,9 +61,9 @@ const Formulaires = () => {
             body: JSON.stringify(eventCreate)
         }).then((response) => response.json())
         .then((data) => {
-            console.log(data);
             console.log('new blog added');
-            console.log(name, content, user, capacity, dateStart, city, price, dateEnd)
+            console.log(name, content, user, capacity, dateStart, city, price, dateEnd, tags);
+            setIsPending(false);
         })
     }
 
@@ -56,7 +84,6 @@ const Formulaires = () => {
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
         
         setTextDateStart(fullDate);
-        console.log("Date de début", fullDate);
     }
 
     const onChangeDateEnd = (event, selectedDate) => {
@@ -67,7 +94,6 @@ const Formulaires = () => {
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
         
         setTextDateEnd(fullDate);
-        console.log("Date de Fin", fullDate)
     }
 
     const showModeStart = (currenMode) => {
@@ -80,14 +106,13 @@ const Formulaires = () => {
         setMode(currenMode);
     }
 
-
+    const [country, setCountry] = useState('Unknown');
 
 
   return (
     <View>
         <MyInput inputValue={name} inputSet={setName}/>
         <MyInput inputValue={content} inputSet={setContent}/>
-        <MyInput inputValue={user} inputSet={setUser}/>
         <MyInput inputValue={capacity} inputSet={setCapacity} inputType={'parseInt'} inputKeyboardType='numeric'/>
 
 
@@ -117,13 +142,19 @@ const Formulaires = () => {
 
         <MyInput inputValue={city} inputSet={setCity}/>
         <MyInput inputValue={price} inputSet={(setPrice)} inputType={'parseInt'} inputKeyboardType='numeric'/>
+
+        <Picker selectedValue={tags} onValueChange={(value, index) => setTags(value)} mode="dropdown">
+            {Object.keys(allTags).map((key, index) => {
+                return <Picker.Item label={allTags[key].title} value={allTags[key].id}/>
+            })}
+        </Picker>
         
-        <Text>{textDateStart}</Text>
-        <Text>{textDateEnd}</Text>
+        { !textDateStart && <Text>{textDateStart}</Text> }
+        { !textDateEnd && <Text>{textDateEnd}</Text> }
 
         
-
-        <Button title='testSubmits' onPress={postEvent}>Submit</Button>
+        { !isPending && <Button title='Creer' onPress={postEvent}/>}
+        { isPending && <Button title='Creation...' disabled/> }
 
     </View>
   )
