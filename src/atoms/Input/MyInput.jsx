@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 
-const MyInput = () => {
+const MyInput = ({inputValue, inputSet, inputType, inputKeyboardType}) => {
     return (
-        <TextInput
-            style={styles.myInput}
-            defaultValue='Ceci est un input'
-        />
+        <TextInput style={styles.myInput} value={inputValue} onChangeText={inputKeyboardType == 'numeric' ? newText => inputSet(parseInt(newText)) : newText => inputSet(newText)} keyboardType={inputKeyboardType}/>
     );
 };
 

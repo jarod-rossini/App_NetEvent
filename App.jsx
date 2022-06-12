@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ProfilScreen from "./src/screens/ProfilScreen";
-import CreateEventScreen from "./src/screens/CreateEventScreen";
+import CreateEventScreen from "./src/pages/CreateEvent";
 import SearchScreen from "./src/screens/SearchScreen";
 import ConnectionScreen from "./src/screens/ConnectionScreen";
 import FavorisScreen from "./src/screens/FavorisScreen";
@@ -14,14 +14,15 @@ import ChangeCityScreen from "./src/screens/ChangeCityScreen";
 import InscriptionScreen from "./src/screens/InscriptionScreen";
 import { AuthContext } from "./src/context/context";
 import * as SecureStore from "expo-secure-store";
-import {
-  MaterialCommunityIcons,
-  Ionicons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons, AntDesign, Ionicons,} from "@expo/vector-icons";
 
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen(dispatch) {
+<<<<<<< HEAD
+=======
+  console.log(dispatch)
+>>>>>>> Jeremy
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -37,6 +38,7 @@ function HomeStackScreen(dispatch) {
         }}
       ></HomeStack.Screen>
       <HomeStack.Screen
+<<<<<<< HEAD
         name="City"
         component={ChangeCityScreen}
         options={{
@@ -48,6 +50,8 @@ function HomeStackScreen(dispatch) {
         }}
       />
       <HomeStack.Screen
+=======
+>>>>>>> Jeremy
         name="Details"
         component={DetailsScreen}
         options={{
@@ -63,6 +67,7 @@ function HomeStackScreen(dispatch) {
 }
 
 const SearchStack = createNativeStackNavigator();
+<<<<<<< HEAD
 
 function SearchStackScreen() {
   return (
@@ -128,6 +133,103 @@ function FavorisStackScreen(dispatch) {
       <FavorisStack.Screen
         name="Favoris"
         children={() => <FavorisScreen dispatch={dispatch} />}
+=======
+
+function SearchStackScreen() {
+  return (
+    <SearchStack.Navigator>
+      <SearchStack.Screen
+        name="Search"
+        component={SearchScreen}
+>>>>>>> Jeremy
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+        }}
+      />
+<<<<<<< HEAD
+      <FavorisStack.Screen
+=======
+      <SearchStack.Screen
+>>>>>>> Jeremy
+        name="Details"
+        component={DetailsScreen}
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+<<<<<<< HEAD
+    </FavorisStack.Navigator>
+  );
+}
+
+const ProfilStack = createNativeStackNavigator();
+function ProfilStackScreen(dispatch) {
+  return (
+    <ProfilStack.Navigator>
+      <ProfilStack.Screen
+        name="Profil"
+        children={() => <ProfilScreen dispatch={dispatch} />}
+=======
+    </SearchStack.Navigator>
+  );
+}
+
+const CreateEventStack = createNativeStackNavigator();
+function CreateEventStackScreen(dispatch) {
+  return (
+    <CreateEventStack.Navigator>
+      <CreateEventStack.Screen
+        name="Create Event"
+        children={() => <CreateEventScreen dispatch={dispatch} />}
+>>>>>>> Jeremy
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+        }}
+      />
+<<<<<<< HEAD
+      <ProfilStack.Screen
+        name="ChangeMdp"
+        component={ChangeMdpScreen}
+=======
+      <CreateEventStack.Screen
+        name="Details"
+        component={DetailsScreen}
+>>>>>>> Jeremy
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+<<<<<<< HEAD
+    </ProfilStack.Navigator>
+  );
+}
+
+=======
+    </CreateEventStack.Navigator>
+  );
+}
+
+const FavorisStack = createNativeStackNavigator();
+function FavorisStackScreen( dispatch ) {
+  return (
+    <FavorisStack.Navigator>
+      <FavorisStack.Screen
+        name="Favoris"
+        children={() => <FavorisScreen dispatch={dispatch} />}
         options={{
           headerStyle: { backgroundColor: "black" },
           headerTitleStyle: {
@@ -165,8 +267,8 @@ function ProfilStackScreen(dispatch) {
         }}
       />
       <ProfilStack.Screen
-        name="ChangeMdp"
-        component={ChangeMdpScreen}
+        name="Details"
+        component={DetailsScreen}
         options={{
           headerStyle: { backgroundColor: "black" },
           headerTitleStyle: {
@@ -179,6 +281,7 @@ function ProfilStackScreen(dispatch) {
   );
 }
 
+>>>>>>> Jeremy
 const ConnectionStack = createNativeStackNavigator();
 function ConnectionStackScreen(dispatch) {
   return (
@@ -209,6 +312,7 @@ function ConnectionStackScreen(dispatch) {
 }
 
 const Tab = createBottomTabNavigator();
+<<<<<<< HEAD
 
 
 export default function App() {
@@ -467,5 +571,142 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
+=======
+export default function App() {
+  const [isSignedIn, dispatch] = React.useState(false);
+  console.log('1',dispatch)
+
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarStyle: {
+            backgroundColor: "black",
+            paddingBottom: 0,
+            borderTopWidth: 0,
+          },
+          tabBarShowLabel: false,
+          tabBarActiveTintColor: "white",
+          tabBarInactiveTintColor: "grey",
+        })}
+      >
+        <Tab.Screen
+          name="/Home"
+          component={HomeStackScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Home",
+            tabBarIcon: ({ color }) => (
+              <MaterialCommunityIcons name="home" color={color} size={26} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="/Search"
+          component={SearchStackScreen}
+          options={{
+            headerShown: false,
+            tabBarLabel: "Search",
+            tabBarIcon: ({ color }) => (
+              <Ionicons name="md-search-outline" size={24} color={color} />
+            ),
+          }}
+        />
+        {isSignedIn ? (
+          <Tab.Screen
+            name="/CreateEvent"
+            component={CreateEventStackScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Create Event",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="calendar-plus"
+                  size={24}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        ) : (
+          <Tab.Screen
+            name="/Connection Create"
+            children={() => <ConnectionStackScreen dispatch={dispatch}  />}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Connection",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="calendar-plus"
+                  size={24}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+
+        {isSignedIn ? (
+          <Tab.Screen
+            name="/Favoris"
+            component={FavorisStackScreen}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Create Event",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="heart" size={24} color={color} />
+              ),
+            }}
+          />
+        ) : (
+          <Tab.Screen
+            name="/Connection Favoris"
+            children={() => <ConnectionStackScreen dispatch={dispatch} />}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Connection",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="heart" size={24} color={color} />
+              ),
+            }}
+          />
+        )}
+
+        {isSignedIn ? (
+          <Tab.Screen
+            name="/Profil"
+            children={() => <ProfilStackScreen dispatch={dispatch} />}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Profil",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="account"
+                  size={25}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        ) : (
+          <Tab.Screen
+            name="/Connection Profil"
+            children={() => <ConnectionStackScreen dispatch={dispatch} />}
+            options={{
+              headerShown: false,
+              tabBarLabel: "Connection",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="account-alert"
+                  size={25}
+                  color={color}
+                />
+              ),
+            }}
+          />
+        )}
+      </Tab.Navigator>
+    </NavigationContainer>
+>>>>>>> Jeremy
   );
 }
