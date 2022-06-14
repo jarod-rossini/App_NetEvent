@@ -47,7 +47,6 @@ export default InscriptionScreen = ({ navigation }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.email == null) {
-          console.log(data);
           alert("Cette email existe déjà");
           return false;
         }
