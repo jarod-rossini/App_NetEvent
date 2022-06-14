@@ -16,6 +16,9 @@ import { AuthContext } from "./src/context/context";
 import * as SecureStore from "expo-secure-store";
 import { MaterialCommunityIcons, AntDesign, Ionicons,} from "@expo/vector-icons";
 
+import jwt_decode from "jwt-decode";
+import dayjs from "dayjs";
+
 const HomeStack = createNativeStackNavigator();
 
 function HomeStackScreen(dispatch) {
@@ -308,6 +311,41 @@ export default function App() {
               })
             })
           });
+      },
+      isExpiredToken : async (token) => {
+        const user = jwt_decode(token);
+        return dayjs.unix(user.exp).diff(dayjs()) < 1;
+
+      },
+      refreshToken: async (refreshToken) => {
+        async function save(key, value) {
+          await SecureStore.setItemAsync(key, value);
+        }
+
+
+        let response = await fetch(
+          "https://netevent-api.herokuapp.com/api/token/refresh",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({
+              refresh_token: refreshToken,
+            }),
+          }
+        )
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.token == null) {
+            alert("token invalide")
+            return false;
+          }
+          /* sauvegarde du token et refreshToken dans le SecureStore */
+          save("userRefreshToken", data.refresh_token);
+          save("userToken", data.token);
+        })
       },
       signOut: () => {
         SecureStore.deleteItemAsync("userToken");
