@@ -121,13 +121,11 @@ const Formulaires = () => {
         setShowStart(true);
         setMode(currenMode);
     }
-
     const showModeEnd = (currenMode) => {
         setShowEnd(true);
         setMode(currenMode);
     }
 
-    const [country, setCountry] = useState('Unknown');
 
 
   return (
@@ -139,6 +137,7 @@ const Formulaires = () => {
 
         <View style={{margin:20}}>
             <Button title='Start' onPress={() => showModeStart('date')}></Button>
+            <Button title='Start' onPress={() => showModeStart('yime')}></Button>
             {showStart && <DateTimePicker
                 testID='dateTimePicker'
                 value={dateStart}
@@ -151,6 +150,7 @@ const Formulaires = () => {
 
         <View style={{margin:20}}>
             <Button title='End' onPress={() => showModeEnd('date')}></Button>
+            <Button title='End' onPress={() => showModeEnd('time')}></Button>
             {showEnd && <DateTimePicker
                 testID='dateTimePicker'
                 value={dateEnd}
