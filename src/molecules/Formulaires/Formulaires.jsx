@@ -30,6 +30,8 @@ const Formulaires = () => {
         getValueForId()
     }, []);
 
+
+
     const [user, setUser] = useState([]);
     const [token, setToken] = useState([]);
 
@@ -57,11 +59,17 @@ const Formulaires = () => {
     const [city, setCity] = useState('Ville');
     const [price, setPrice] = useState('');
 
+
     const [isPending, setIsPending] = useState(false);
 
     const postEvent = (e) => {
         e.preventDefault();
         setIsPending(true);
+
+        if ((dateStart.getTime() - dateEnd.getTime()) > 0) {
+            alert('La date de début doit commencer avant la date de fin')
+            return setIsPending(false);
+        }        
 
         const eventCreate = {name, content, user, capacity, dateStart, dateEnd, city, price}
         Object.keys(eventCreate).map((key, index) => {
@@ -76,14 +84,13 @@ const Formulaires = () => {
             mode: 'no-cors',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTUwNDIyMTIsImV4cCI6MTY1NTA0NTgxMiwicm9sZXMiOlsic3RyaW5nIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZW1tYW51ZWxAaG90bWFpbC5mciJ9.GmrfpG_pk7Ek9CNikG9dnEGySw-gzM3c4aHB6K0IbB7odST1kCY7wRdiMQvqxQdw07Q8RPGC2UXZhPdr94ou9M0j4Vb1KMo7cGqUjsF6AOV15dcaMhKRhmks0RKOIno0TM554vR_BEiFeQJC57QPvaMwz2_AYbipmMQxasN6sim5OzkiXU_xvQiAoCpuiwP4NtykACUfvKADJDLd48pTv9UXA6EygRgoAvOeLgzGMJ4HG1oJcFHye0mDSDcNa5w2xT83Vi9UDPQ2qjn-bUJbddjAOAdmq68esAK9X4e4uhxZxoFSlIiZVvbReYpQ6DZjz5f7QKAvhZ5JK9ulMwGXUg',
+                'Authorization': 'Bearer ' + token,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(eventCreate)
         }).then((response) => response.json())
         .then((data) => {
             console.log(data);
-            console.log(name, content, user, capacity, dateStart, city, price, dateEnd);
             setIsPending(false);
         })
     }
@@ -103,8 +110,9 @@ const Formulaires = () => {
         setShowStart(false);
         let tempDate = new Date(currentDate);
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        
-        setTextDateStart(fullDate);
+        let fullTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+                
+        setTextDateStart(fullDate + '\n' + fullTime);
     }
 
     const onChangeDateEnd = (event, selectedDate) => {
@@ -113,8 +121,9 @@ const Formulaires = () => {
         setShowEnd(false);
         let tempDate = new Date(currentDate);
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        
-        setTextDateEnd(fullDate);
+        let fullTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+                
+        setTextDateEnd(fullDate + '\n' + fullTime);
     }
 
     const showModeStart = (currenMode) => {
@@ -125,9 +134,6 @@ const Formulaires = () => {
         setShowEnd(true);
         setMode(currenMode);
     }
-
-
-
   return (
     <View>
         <MyInput inputValue={name} inputSet={setName}/>
@@ -136,8 +142,9 @@ const Formulaires = () => {
 
 
         <View style={{margin:20}}>
-            <Button title='Start' onPress={() => showModeStart('date')}></Button>
-            <Button title='Start' onPress={() => showModeStart('yime')}></Button>
+            <Button title='Date de début' onPress={() => showModeStart('date')}></Button>
+            <Button title='Heure de début' onPress={() => showModeStart('time')}></Button>
+            <Text>{textDateStart}</Text>
             {showStart && <DateTimePicker
                 testID='dateTimePicker'
                 value={dateStart}
@@ -149,8 +156,9 @@ const Formulaires = () => {
         </View>
 
         <View style={{margin:20}}>
-            <Button title='End' onPress={() => showModeEnd('date')}></Button>
-            <Button title='End' onPress={() => showModeEnd('time')}></Button>
+            <Button title='Date de fin' onPress={() => showModeEnd('date')}></Button>
+            <Button title='Heure de fin' onPress={() => showModeEnd('time')}></Button>
+            <Text>{textDateEnd}</Text>
             {showEnd && <DateTimePicker
                 testID='dateTimePicker'
                 value={dateEnd}
@@ -169,10 +177,6 @@ const Formulaires = () => {
                 return <Picker.Item label={allTags[key].title} value={allTags[key].id}/>
             })}
         </Picker>
-        
-        { !textDateStart && <Text>{textDateStart}</Text> }
-        { !textDateEnd && <Text>{textDateEnd}</Text> }
-
         
         { !isPending && <Button title='Creer' onPress={postEvent}/>}
         { isPending && <Button title='Creation...' disabled/> }
