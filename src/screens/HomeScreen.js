@@ -17,6 +17,10 @@ export default HomeScreen = () => {
       <Button title="City" onPress={() => navigation.navigate("City")} />
       <Text>Home screen</Text>
       <Button title="Details" onPress={() => navigation.navigate("Details")} />
+      <Button title="Event" onPress={() => navigation.navigate("Event",{
+        idEvent: "1"
+      }
+      )} />
     </View>
   );
 };

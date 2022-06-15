@@ -15,6 +15,7 @@ import InscriptionScreen from "./src/screens/InscriptionScreen";
 import { AuthContext } from "./src/context/context";
 import * as SecureStore from "expo-secure-store";
 import { MaterialCommunityIcons, AntDesign, Ionicons,} from "@expo/vector-icons";
+import EventScreen from "./src/screens/EventScreen";
 
 import jwt_decode from "jwt-decode";
 import dayjs from "dayjs";
@@ -50,6 +51,17 @@ function HomeStackScreen(dispatch) {
       <HomeStack.Screen
         name="Details"
         component={DetailsScreen}
+        options={{
+          headerStyle: { backgroundColor: "black" },
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
+      <HomeStack.Screen
+        name="Event"
+        component={EventScreen}
         options={{
           headerStyle: { backgroundColor: "black" },
           headerTitleStyle: {
