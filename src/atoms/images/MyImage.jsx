@@ -11,8 +11,8 @@ const MyImage = ({url_image}) => {
 const styles = StyleSheet.create({
     MyImage:{
         resizeMode: 'cover',
-        width: 500,
-        height: 500
+        width: '100%',
+        height: 200
     }
 })
 

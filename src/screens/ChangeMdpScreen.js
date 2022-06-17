@@ -52,17 +52,19 @@ export default ChangeMdpScreen = ({ route }) => {
       const dataNewPassword = {
         password: newPassword,
       };
+      console.log(typeof newPassword)
       fetch(
         "https://netevent-api.herokuapp.com/api/users/" + userId,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/merge-patch+json",
+            "accept": "application/json"
           },
           body: JSON.stringify(dataNewPassword),
         }
       )
-        .then(() => {
+        .then((data) => {
           onChangePassword("");
           onChangeNewPassword("")
           alert("Mot de passe modifié avec success")
