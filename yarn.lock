@@ -1219,6 +1219,13 @@
     "lodash.pick" "^4.4.0"
     "lodash.template" "^4.5.0"
 
+"@fawazahmed/react-native-read-more@^2.3.6":
+  "integrity" "sha512-UXVvD2hRncegtAPdG67Fgj5x/NQv+sq9jPDr6jZLWCDch4qUj9DE4u+1xAUvzHXeHgWDE5+mk3vLePy2+xsSyA=="
+  "resolved" "https://registry.npmjs.org/@fawazahmed/react-native-read-more/-/react-native-read-more-2.3.6.tgz"
+  "version" "2.3.6"
+  dependencies:
+    "prop-types" "^15.7.2"
+
 "@hapi/hoek@^9.0.0":
   "integrity" "sha512-gfta+H8aziZsm8pZa0vj04KO6biEiisppNgA1kbJvFrrWu9Vm7eaUEy76DIxsuTaWvti5fkJVhllWc6ZTE+Mdw=="
   "resolved" "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.2.1.tgz"

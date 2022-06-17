@@ -8,7 +8,11 @@ const MyTitle = ({title}) => {
 }
 const styles = StyleSheet.create({
     MyTitle:{
-        color: 'black'
+        fontWeight: "bold",
+        fontSize: 20,
+        textAlign: "center",
+        padding: 5,
+        color: 'white',
     }
 })
 export default MyTitle
