@@ -7,10 +7,7 @@ import Formulaires from "../molecules/Formulaires/Formulaires";
 
 const CreateEvent = () => {
     return (
-        <View>
-            <Formulaires/>
-        </View>
-        
+        <Formulaires/>        
     )
 }
 

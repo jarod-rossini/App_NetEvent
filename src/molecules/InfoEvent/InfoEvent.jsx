@@ -12,8 +12,6 @@ const InfoEvent = () => {
         fetch('https://netevent-api.herokuapp.com/api/events/3')
         .then((response) => response.json())
         .then((data) => {
-
-
             setData(data)
         })
         .catch((error) => {

@@ -1,18 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Text, TextInput } from 'react-native';
 
-const MyInput = ({inputValue, inputSet, inputType, inputKeyboardType}) => {
+const MyInput = ({inputValue, placeholder, placeHoldeTextColor, inputSet, inputKeyboardType, inputStyle}) => {
     return (
-        <TextInput style={styles.myInput} value={inputValue} onChangeText={inputKeyboardType == 'numeric' ? newText => inputSet(parseInt(newText)) : newText => inputSet(newText)} keyboardType={inputKeyboardType}/>
+        <TextInput placeholder={placeholder} style={inputStyle} value={inputValue} onChangeText={inputKeyboardType == 'numeric' ? newText => inputSet(newText) : newText => inputSet(newText)} keyboardType={inputKeyboardType} placeholderTextColor={placeHoldeTextColor} />
     );
 };
-
-const styles = StyleSheet.create({
-    myInput:{
-        height: 40,
-        width: '60%',
-        borderColor: 'gray',
-        borderWidth: 1
-    }
-})
 export default MyInput;

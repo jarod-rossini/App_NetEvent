@@ -1,6 +1,6 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { MyInput } from "../../atoms/Atom"
+import { MyButton, MyInput } from "../../atoms/Atom"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Picker } from "@react-native-picker/picker";
 import * as SecureStore from "expo-secure-store";
@@ -8,11 +8,9 @@ import * as SecureStore from "expo-secure-store";
 
 const Formulaires = () => {
 
-
-    const [allTags, setAllTags] = useState('test');
+    const [allTags, setAllTags] = useState([]);
     const [tags, setTags] = useState('/api/tags/5')
-
-    const getTags = () => {
+    const getTags = () => { //Récupération de Tous les Tags
         fetch ('https://netevent-api.herokuapp.com/api/tags', {
             headers: {
                 'Accept': 'application/json'
@@ -24,53 +22,56 @@ const Formulaires = () => {
         })
     }
 
-    useEffect(() => {
-        getTags();
-        getValueForToken()
-        getValueForId()
-    }, []);
-
-
-
+    //Récupère les informations de l'User
     const [user, setUser] = useState([]);
     const [token, setToken] = useState([]);
-
-    async function getValueForId() {
+    async function getValueForId() { //Récupère l'id de l'user
         let result = await SecureStore.getItemAsync("idUser");
         if (result){
             setUser("api/users/" + result);
         }
     }
-
-    async function getValueForToken() {
+    async function getValueForToken() { //Rècupère le token de l'user
         let result = await SecureStore.getItemAsync("userToken");
         if (result){
             setToken(result);
         }
     }
-    
+
+    useEffect(() => {
+        getTags();
+        getValueForToken()
+        getValueForId()
+    }, []);   
 
 
-    const [name, setName] = useState('Nom');
-    const [content, setContent] = useState('Description');
+    const [name, setName] = useState('');
+    const [content, setContent] = useState('');
     const [capacity, setCapacity] = useState('');
     const [dateStart, setDateStart] = useState(new Date());
     const [dateEnd, setDateEnd] = useState(new Date());
-    const [city, setCity] = useState('Ville');
-    const [price, setPrice] = useState('');
-
+    const [city, setCity] = useState('');
+    let [price, setPrice] = useState('');
 
     const [isPending, setIsPending] = useState(false);
 
-    const postEvent = (e) => {
+
+    const stringIntoNumber = () =>{
+        return new Promise((resolve) => {
+            resolve(parseInt(price))
+        })
+    }
+
+    const postEvent = async (e) => {
         e.preventDefault();
         setIsPending(true);
 
-        if ((dateStart.getTime() - dateEnd.getTime()) > 0) {
+        if ((dateStart.getTime() - dateEnd.getTime()) > 0) { //Vérifie la différence entre les dates
             alert('La date de début doit commencer avant la date de fin')
             return setIsPending(false);
-        }        
-
+        }
+        price = await stringIntoNumber()
+        console.log(price)
         const eventCreate = {name, content, user, capacity, dateStart, dateEnd, city, price}
         Object.keys(eventCreate).map((key, index) => {
             if (eventCreate[key].length == 0 || eventCreate[key] == ' ' || eventCreate[key] == '') {
@@ -84,7 +85,7 @@ const Formulaires = () => {
             mode: 'no-cors',
             headers: {
                 'Accept': 'application/json',
-                'Authorization': 'Bearer ' + token,
+                'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2NTUzOTYxNjgsImV4cCI6MTY1NTM5OTc2OCwicm9sZXMiOlsic3RyaW5nIiwiUk9MRV9VU0VSIl0sInVzZXJuYW1lIjoiZW1tYW51ZWxAaG90bWFpbC5mciJ9.szEWaGYYS4pB3L3tubWy8rhs3Q6EbNlWUDT0xjq4uJMI3LkJVcN1fTfEK76pOoWpGmE5ym8O9mPNc8GRJ3sivobu2TK7HDaCEXG3DlwRbrgZaMLLtJRbl86esZkdJdl8u8A9vZHNzOaaQsv9yfzWFJtC2Z3uecpm4K-T0Rrqo4kuuHgArNgyFoicqAYQH-TbQMz1MLVetzuvGGSTXa91JsYdKeJmDky15Qrn1asAPg-Lo1o9-dmzYbBWLtXOl9uFMtWL17VMhn00VU50-3anE2EhJz-suH0B-5R_KY1Fn2qlcvJZBO-us8r7hGoxolWTTgIsyWHkgjSsn6iVOEHaYg',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(eventCreate)
@@ -95,22 +96,21 @@ const Formulaires = () => {
         })
     }
 
+
+    //Affichage DateTimePicker
     const [mode, setMode] = useState('date');
     const [showStart, setShowStart] = useState(false);
     const [showEnd, setShowEnd] = useState(false);
     const [textDateStart, setTextDateStart] = useState('Empty');
     const [textDateEnd, setTextDateEnd] = useState('Empty');
 
-
-
-    
     const onChangeDateStart = (event, selectedDate) => {
         const currentDate = selectedDate || dateStart;
         setDateStart(currentDate);
         setShowStart(false);
         let tempDate = new Date(currentDate);
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fullTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+        let fullTime = tempDate.getHours() + 'h' + tempDate.getMinutes();
                 
         setTextDateStart(fullDate + '\n' + fullTime);
     }
@@ -121,7 +121,7 @@ const Formulaires = () => {
         setShowEnd(false);
         let tempDate = new Date(currentDate);
         let fullDate = tempDate.getDate() + '/' + (tempDate.getMonth() + 1) + '/' + tempDate.getFullYear();
-        let fullTime = 'Hours: ' + tempDate.getHours() + ' | Minutes: ' + tempDate.getMinutes();
+        let fullTime = tempDate.getHours() + 'h' + tempDate.getMinutes();
                 
         setTextDateEnd(fullDate + '\n' + fullTime);
     }
@@ -134,55 +134,139 @@ const Formulaires = () => {
         setShowEnd(true);
         setMode(currenMode);
     }
-  return (
-    <View>
-        <MyInput inputValue={name} inputSet={setName}/>
-        <MyInput inputValue={content} inputSet={setContent}/>
-        <MyInput inputValue={capacity} inputSet={setCapacity} inputType={'parseInt'} inputKeyboardType='numeric'/>
+
+    const testalert = () => {
+        alert('bonjour');
+    }
 
 
-        <View style={{margin:20}}>
-            <Button title='Date de début' onPress={() => showModeStart('date')}></Button>
-            <Button title='Heure de début' onPress={() => showModeStart('time')}></Button>
-            <Text>{textDateStart}</Text>
-            {showStart && <DateTimePicker
-                testID='dateTimePicker'
-                value={dateStart}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChangeDateStart}
-            />}
+
+
+    return (
+        <View style={styles.container}>
+            <ScrollView style={styles.ScrollView}>
+
+                <MyInput placeholder={'Nom Evenement'} placeHoldeTextColor={'white'} inputStyle={styles.myInput} inputValue={name} inputSet={setName}/>
+                <MyInput placeholder={'Description'} placeHoldeTextColor={'white'} inputStyle={styles.myInput} inputValue={content} inputSet={setContent}/>
+
+
+                <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                    <Button title='Date de début' onPress={() => showModeStart('date')}></Button>
+                    <Button title='Heure de début' onPress={() => showModeStart('time')}></Button>
+                    {showStart && <DateTimePicker
+                        testID='dateTimePicker'
+                        value={dateStart}
+                        mode={mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDateStart}
+                    />}
+                </View>
+                <Text style={styles.dateText}>{textDateStart}</Text>
+
+                <View style={{display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                    <Button title='Date de fin' onPress={() => showModeEnd('date')}></Button>
+                    <Button title='Heure de fin' onPress={() => showModeEnd('time')}></Button>
+                    {showEnd && <DateTimePicker
+                        testID='dateTimePicker'
+                        value={dateEnd}
+                        mode={mode}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeDateEnd}
+                    />}
+                </View>
+                <Text style={styles.dateText}>{textDateEnd}</Text>
+
+                <MyInput placeholder={'Adresse'} placeHoldeTextColor={'white'} inputStyle={styles.myInput} inputValue={city} inputSet={setCity}/>
+
+                <View style={styles.number}>
+                    <MyInput placeholder={'Prix'} placeHoldeTextColor={'white'} inputStyle={styles.myInputNumber} inputValue={price} inputSet={(setPrice)} inputType={'parseInt'} inputKeyboardType='numeric'/>
+                    <MyInput placeholder={'Nb Personnes'} placeHoldeTextColor={'white'} inputStyle={styles.myInputNumber} inputValue={capacity} inputSet={setCapacity} inputType={'parseInt'} inputKeyboardType='numeric'/>
+                </View>
+                
+                <Picker selectedValue={tags} onValueChange={(value) => setTags(value)} mode="dropdown">
+                    {allTags.map((item) => {
+                        return ( <Picker.Item label={item.title} value={item.id} key={item.id}/> )
+                    })}
+                </Picker>
+                
+                { !isPending && <MyButton pressable={styles.pressable} button={styles.myButton} buttonText={styles.buttonText} text={'Creer'} onPress={postEvent}/>}
+                { isPending && <MyButton pressable={styles.pressable} button={styles.myButton} buttonText={styles.buttonText} text={'Creation...'} disabled={true}/> }
+            </ScrollView>
         </View>
-
-        <View style={{margin:20}}>
-            <Button title='Date de fin' onPress={() => showModeEnd('date')}></Button>
-            <Button title='Heure de fin' onPress={() => showModeEnd('time')}></Button>
-            <Text>{textDateEnd}</Text>
-            {showEnd && <DateTimePicker
-                testID='dateTimePicker'
-                value={dateEnd}
-                mode={mode}
-                is24Hour={true}
-                display="default"
-                onChange={onChangeDateEnd}
-            />}
-        </View>
-
-        <MyInput inputValue={city} inputSet={setCity}/>
-        <MyInput inputValue={price} inputSet={(setPrice)} inputType={'parseInt'} inputKeyboardType='numeric'/>
-
-        <Picker selectedValue={tags} onValueChange={(value, index) => setTags(value)} mode="dropdown">
-            {Object.keys(allTags).map((key, index) => {
-                return <Picker.Item label={allTags[key].title} value={allTags[key].id}/>
-            })}
-        </Picker>
-        
-        { !isPending && <Button title='Creer' onPress={postEvent}/>}
-        { isPending && <Button title='Creation...' disabled/> }
-
-    </View>
-  )
+    )
 }
 
+
+
+const styles = StyleSheet.create({
+    container:{
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black'
+    },
+
+    ScrollView:{
+        width: '100%',
+        backgroundColor: 'black',
+    },
+
+    number:{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+
+        backgroundColor: 'black'
+    },
+
+    myInput:{
+        marginVertical: 10,
+        width: '40%',        
+        borderBottomWidth: 1,
+        borderColor: 'white',
+        color: 'white',        
+        alignSelf: 'center',
+        textAlign: 'center',
+        fontSize: 24,
+        color: 'white',
+    },
+
+    myInputNumber:{
+        marginVertical: 10,
+        width: '40%',        
+        borderBottomWidth: 1,
+        borderColor: 'white',
+        color: 'white',        
+        alignSelf: 'center',
+        textAlign: 'center',
+        width: '20%', 
+        fontSize: 24
+    },
+
+    dateText:{
+        color: 'white',
+        textAlign: 'center',
+        fontSize: 24,
+        marginVertical: 10
+    },
+
+    myButton:{
+        padding: 10,
+        marginHorizontal: '30%',
+        backgroundColor: 'white',
+        borderRadius: 10
+    },
+
+    buttonText:{
+        fontSize: 24,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+    }
+})
 export default Formulaires;
