@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   TextInput,
   Image,
+  Pressable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/context.js";
@@ -23,40 +24,49 @@ export default ProfilScreen = () => {
   async function getValueForEmail() {
     let result = await SecureStore.getItemAsync("emailUser");
     if (result) {
-      setEmail(result)
+      setEmail(result);
     }
   }
 
   async function getValueForId() {
     let result = await SecureStore.getItemAsync("idUser");
     if (result) {
-      setId(result)
+      setId(result);
     }
   }
 
-  getValueForEmail()
-  getValueForId()
-  
+  getValueForEmail();
+  getValueForId();
 
   return (
     <View style={styles.view}>
-      <Image
-        source={{
-          uri: "https://img2.freepng.fr/20180802/xaw/kisspng-clip-art-portable-network-graphics-computer-icons-user-staff-person-man-profile-boss-circle-svg-png-5b62ed560cb369.529707841533209942052.jpg",
-        }}
-        style={styles.image}
-      />
-      <Text style={styles.text}>{email}</Text>
-      <Button
-        title="changer de mot de passe"
-        onPress={() =>
-          navigation.navigate("ChangeMdp", {
-            userId: id, 
-            userEmail: email,
-          })
-        }
-      />
-      <Button title="Disconnect" onPress={() => signOut()} />
+      <View style={styles.viewImage}>
+        <Image
+          source={{
+            uri: "https://img2.freepng.fr/20180802/xaw/kisspng-clip-art-portable-network-graphics-computer-icons-user-staff-person-man-profile-boss-circle-svg-png-5b62ed560cb369.529707841533209942052.jpg",
+          }}
+          style={styles.image}
+        />
+        <Text style={styles.text}>{email}</Text>
+      </View>
+      <View style={styles.viewButtonModify}>
+        <Pressable
+          style={styles.buttonModify}
+          onPress={() =>
+            navigation.navigate("ChangeMdp", {
+              userId: id,
+              userEmail: email,
+            })
+          }
+        >
+          <Text style={styles.textButtonModify}>CHANGER DE MOT DE PASSE</Text>
+        </Pressable>
+      </View>
+      <View style={styles.viewButtonDisconnect}>
+        <Pressable style={styles.buttonDisconnect} onPress={() => signOut()}>
+          <Text style={styles.textButtonDisconnect}>DISCONNECT</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -64,9 +74,23 @@ export default ProfilScreen = () => {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "white",
+    backgroundColor: "black",
+  },
+  viewImage: {
+    alignItems: "center",
+    justifyContent: "flex-end",
+    height: "40%",
+  },
+  viewButtonModify: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "30%",
+  },
+  viewButtonDisconnect: {
+    alignItems: "flex-end",
+    justifyContent: "center",
+    height: "30%",
   },
   image: {
     width: 100,
@@ -75,6 +99,32 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   text: {
-    marginBottom: 15,
+    color: "white",
+  },
+  buttonModify: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 3,
+    backgroundColor: "white",
+  },
+  buttonDisconnect: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    elevation: 3,
+    backgroundColor: "red",
+  },
+  textButtonModify: {
+    fontSize: 12,
+    letterSpacing: 0.25,
+    color: "black",
+  },
+  textButtonDisconnect: {
+    fontSize: 12,
+    letterSpacing: 0.25,
+    color: "white",
   },
 });
