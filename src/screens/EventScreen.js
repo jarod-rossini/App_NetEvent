@@ -15,10 +15,15 @@ import { AuthContext } from "../context/context.js";
 import { useContext, useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../atoms/Atom";
-import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons,} from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  AntDesign,
+  Ionicons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import dayjs from "dayjs";
-import ReadMore from '@fawazahmed/react-native-read-more';
-
+import ReadMore from "@fawazahmed/react-native-read-more";
 
 export default EventScreen = ({ route }) => {
   const { idEvent } = route.params;
@@ -50,34 +55,52 @@ export default EventScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView >
-      <View style={styles.header}>
-        <MyImage
-          style={styles.detailImg}
-          url_image={"https://netevent-api.herokuapp.com" + data.fileUrl}
-        />
-        <MyTitle title={data.name} />
-        <View style={styles.info}>
-          <View style={styles.date}>
-            <MaterialCommunityIcons name='calendar' size={22} color="white"/>
-            <Text style={styles.detailDate}>{dayjs(data.dateStart).format('DD MMMM YYYY à HH [heures] mm')}</Text>
+      <ScrollView>
+       
+          <MyImage
+            style={styles.detailImg}
+            url_image={"https://netevent-api.herokuapp.com" + data.fileUrl}
+          />
+          <MyTitle title={data.name} />
+          <View style={styles.info}>
+            <View style={styles.date}>
+              <MaterialCommunityIcons name="calendar" size={22} color="white" />
+              <Text style={styles.detailDate}>
+                {dayjs(data.dateStart).format("DD MMMM YYYY à HH [heures] mm")}
+              </Text>
+            </View>
+            <View style={styles.localisation}>
+              <MaterialIcons name="location-pin" size={22} color="white" />
+              <Text style={styles.detailLocalisation}>{data.city}</Text>
+            </View>
           </View>
-          <View style={styles.localisation}>
-            <MaterialIcons name='location-pin' size={22} color="white"/>
-            <Text style={styles.detailLocalisation}>{data.city}</Text>
-          </View>
-
-        </View>
-        <View style={styles.titleAndHeart}>
+          <View style={styles.titleAndHeart}>
             <Text style={styles.descriptionTitle}>Description</Text>
-            <Ionicons  name='heart-outline' size={24} color="red" />
-        </View>
-      </View>
-      
-      <ReadMore numberOfLines={8} style={styles.description} seeLessText="voir moins" seeMoreText="voir plus" >
+            <Ionicons name="heart-outline" size={24} color="red" />
+          </View>
+       
+
+        <ReadMore
+          numberOfLines={6}
+          style={styles.description}
+          seeLessText="voir moins"
+          seeMoreText="voir plus"
+        >
           {data?.content}
         </ReadMore>
-        </ScrollView>
+        <View style={styles.infoPriceCapacity}>
+          <View style={styles.localisation}>
+            <MaterialCommunityIcons name="ticket" size={22} color="white" />
+            <Text style={styles.detailLocalisation}>
+              {data.price === 0 ? " Gratuit" : data.price}
+            </Text>
+          </View>
+          <View style={styles.localisation}>
+            <FontAwesome5 name="users" size={22} color="white" />
+            <Text style={styles.detailLocalisation}>{data.capacity}</Text>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -86,10 +109,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
-  },
-  header: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   link: {
     color: "blue",
@@ -110,36 +129,36 @@ const styles = StyleSheet.create({
   },
   info: {
     marginLeft: 10,
-    width:'100%',
+    width: "100%",
     justifyContent: "flex-start",
     marginVertical: 20,
   },
   date: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row",
   },
   detailDate: {
-    color: 'grey',
+    color: "grey",
     marginLeft: 10,
     fontSize: 16,
     marginBottom: 13,
   },
   localisation: {
-    display: 'flex',
-    flexDirection: 'row'
+    display: "flex",
+    flexDirection: "row",
   },
   detailLocalisation: {
-    color: 'grey',
+    color: "grey",
     marginLeft: 10,
     fontSize: 16,
   },
   titleAndHeart: {
-    width: '95%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    marginBottom: 5
+    width: "95%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    marginBottom: 5,
   },
   descriptionTitle: {
     marginLeft: 5,
@@ -148,13 +167,22 @@ const styles = StyleSheet.create({
   },
   description: {
     marginHorizontal: 20,
+    marginBottom: 20,
     fontSize: 16,
     color: "rgb(200,200,200)",
   },
+  infoPriceCapacity: {
+    width: "95%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    marginBottom: 5,
+  },
   see: {
-    fontSize: 12
+    fontSize: 12,
   },
   scrollView: {
     marginBottom: 0,
-  }
+  },
 });
