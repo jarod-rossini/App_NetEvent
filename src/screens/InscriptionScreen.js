@@ -6,11 +6,13 @@ import {
   StyleSheet,
   TextInput,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/context.js";
 import { useContext, useState } from "react";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default InscriptionScreen = ({ navigation }) => {
   const [username, onChangeUsername] = useState("");
@@ -27,44 +29,33 @@ export default InscriptionScreen = ({ navigation }) => {
 
     const inputValue = {
       email: username,
-      roles: [
-
-      ],
+      roles: [],
       password: password,
     };
 
-    let createUser = fetch(
-      "https://netevent-api.herokuapp.com/api/users",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(inputValue),
-      }
-    )
+    let createUser = fetch("https://netevent-api.herokuapp.com/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(inputValue),
+    })
       .then((response) => response.json())
       .then((data) => {
         if (data.email == null) {
           alert("Cette email existe déjà");
           return false;
         }
-        signIn({username, password})
-        
+        signIn({ username, password });
       });
   };
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-      }}
-    >
-      <Text>Formulaire pour changer de mot de passe</Text>
-      <SafeAreaView>
+    <View style={styles.view}>
+      <View style={styles.viewIcon}>
+        <MaterialIcons name="app-registration" size={50} color="red" />
+      </View>
+      <View style={styles.viewForm}>
         <TextInput
           style={styles.input}
           onChangeText={onChangeUsername}
@@ -78,20 +69,48 @@ export default InscriptionScreen = ({ navigation }) => {
           placeholder="your password"
           secureTextEntry
         />
-        <Button title="Inscription" onPress={inscription} />
-      </SafeAreaView>
-      <Text>{username}</Text>
-      <Text>{password}</Text>
-      
+        <Pressable style={styles.buttonConnexion} onPress={inscription}>
+          <Text style={styles.text}>INSCRIPTION</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
+  },
+  viewIcon: {
+    justifyContent: "center",
+    height: "30%",
+  },
+  viewForm: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "40%",
+  },
   input: {
     height: 40,
+    width: 130,
+    backgroundColor: "white",
     margin: 12,
     borderWidth: 1,
     padding: 10,
+  },
+  buttonConnexion: {
+    width: "40%",
+    marginTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    elevation: 3,
+    backgroundColor: "red",
+  },
+  text: {
+    color: "white",
   },
 });
