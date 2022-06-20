@@ -108,9 +108,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     elevation: 3,
     backgroundColor: "white",
+    width: 200,
   },
   buttonDisconnect: {
     alignItems: "center",
+    width: 200,
     justifyContent: "center",
     paddingVertical: 12,
     paddingHorizontal: 15,

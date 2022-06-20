@@ -80,15 +80,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     backgroundColor: "white",
+    textAlign: "center",
   },
   textInscription: {
     color: "white",
+    textAlign: "center",
   },
   textConnexion: {
     color: "red",
   },
   buttonInscription: {
-    width: "40%",
+    width: 200,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8,
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
   buttonConnexion: {
-    width: "40%",
+    width: 200,
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 8,

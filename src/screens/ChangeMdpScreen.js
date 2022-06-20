@@ -6,9 +6,11 @@ import {
   StyleSheet,
   TextInput,
   SafeAreaView,
+  Pressable,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default ChangeMdpScreen = ({ route }) => {
   const { userId, userEmail } = route.params;
@@ -76,16 +78,12 @@ export default ChangeMdpScreen = ({ route }) => {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "white",
-      }}
-    >
+    <View style={styles.view} >
+      <View style={styles.viewIcon}>
+        <MaterialCommunityIcons name="form-textbox-password" size={50} color="red" />
+      </View>
+      <View style={styles.viewForm}>
       <Text>Formulaire pour changer de mot de passe</Text>
-      <SafeAreaView>
         <TextInput
           style={styles.input}
           onChangeText={onChangePassword}
@@ -100,17 +98,57 @@ export default ChangeMdpScreen = ({ route }) => {
           placeholder="new password"
           secureTextEntry
         />
-        <Button title="changer mot de passe" onPress={changeMdp} />
-      </SafeAreaView>
+        <Pressable style={styles.buttonChangeMdp} onPress={changeMdp} >
+          <Text style={styles.text}>Change mot de passe</Text>
+        </Pressable>
+        </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "black",
+  },
+  viewIcon: {
+    justifyContent: "center",
+    height: "30%",
+  },
+  viewForm: {
+    alignItems: "center",
+    justifyContent: "center",
+    height: "40%",
+  },
   input: {
+    flex:1,
+    width: "100%",
+    backgroundColor: "white",
+    margin: 12,
+    padding: 10,
+  },
+  buttonChangeMdp: {
+    width: 200,
+    marginTop: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    elevation: 3,
+    backgroundColor: "red",
+  },
+  input: {
+    backgroundColor: "white",
     height: 40,
     margin: 12,
+    width: 200,
     borderWidth: 1,
     padding: 10,
+    textAlign: "center",
+  },
+  text: {
+    color: "white",
+
   },
 });

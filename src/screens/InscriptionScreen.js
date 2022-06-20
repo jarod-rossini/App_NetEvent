@@ -94,14 +94,15 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    width: 130,
+    width: 200,
     backgroundColor: "white",
     margin: 12,
     borderWidth: 1,
     padding: 10,
+    textAlign: "center",
   },
   buttonConnexion: {
-    width: "40%",
+    width: 200,
     marginTop: 15,
     alignItems: "center",
     justifyContent: "center",
