@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -14,9 +15,33 @@ import {
 } from "react-native";
 /* import * as React from "react"; */
 import { useNavigation } from "@react-navigation/native";
-import { Title } from "react-native-paper";
+import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../atoms/Atom";
 
 export default HomeScreen = () => {
+  const [data, setData] = React.useState([]);
+
+  const getInfoEvent = () => {
+    fetch("https://netevent-api.herokuapp.com/api/events",{
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setData(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getInfoEvent();
+  }, []);
+
   const navigation = useNavigation();
 
   const styles = StyleSheet.create({
@@ -69,13 +94,45 @@ export default HomeScreen = () => {
   });
 
   const images = new Array(6).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
+  const mainImage = new Array(1).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
 
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const { width: windowWidth } = useWindowDimensions();
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Category 1</Text>
+      <ScrollView
+        horizontal={true}
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event([
+          {
+            nativeEvent: {
+              contentOffset: {
+                x: scrollX
+              }
+            }
+          }
+        ])}
+        scrollEventThrottle={1}
+      >
+        {mainImage.map((image, imageIndex) => {
+          return (
+            <View
+              style={{ width: windowWidth}}
+              key={imageIndex}
+            >
+                <ImageBackground source={{ uri: image }} style={styles.card}>
+                    {/* <TouchableOpacity onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
+                      <View style={styles.textContainer}>
+                      </View>
+                    </TouchableOpacity> */}
+                </ImageBackground>
+            </View>
+          );
+        })}
+      </ScrollView>
+      <Text style={{ color: "black" }}>{ data.title + data.id }</Text>
       <View style={styles.scrollContainer}>
         <ScrollView
           horizontal={true}
@@ -98,8 +155,8 @@ export default HomeScreen = () => {
                 style={{ width: windowWidth/2}}
                 key={imageIndex}
               >
-                  <ImageBackground source={{ uri: image }} style={styles.card} onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                      <TouchableOpacity onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
+                  <ImageBackground source={{ uri: image }} style={styles.card}>
+                      <TouchableOpacity onPress={() => navigation.navigate("Event",/* {idEvent: imageIndex}, */ {event : data.event[imageIndex] })}>
                         <View style={styles.textContainer}>
                           {/* <Text style={styles.infoText}>
                             {"Image - " + imageIndex}
