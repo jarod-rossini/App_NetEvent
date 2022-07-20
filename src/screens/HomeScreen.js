@@ -11,17 +11,21 @@ import {
   TouchableOpacity,
   Touchable,
   Animated,
-  useWindowDimensions
+  useWindowDimensions,
+  ListViewComponent
 } from "react-native";
 /* import * as React from "react"; */
 import { useNavigation } from "@react-navigation/native";
 import { MyDate, MyImage, MyLogo, MyTitle, MyInput } from "../atoms/Atom";
+import { render } from "react-dom";
 
 export default HomeScreen = () => {
   const [data, setData] = React.useState([]);
+  const [data1, setData1] = React.useState([]);
+/*   const idCategory = 2; */
 
   const getInfoEvent = () => {
-    fetch("https://netevent-api.herokuapp.com/api/events",{
+    fetch("https://netevent-api.herokuapp.com/api/events?page=1&eventTags.tags=2",{
       method: "GET",
       headers: {
         Accept: "application/json",
@@ -30,7 +34,12 @@ export default HomeScreen = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        /* console.log(data); */
+        /* console.log(data[0].id);
+        console.log(data[0].eventTags[0].tags.title);
+        data.map(() => {
+          console.log(data[0].id);
+        }); */
         setData(data);
       })
       .catch((error) => {
@@ -40,6 +49,36 @@ export default HomeScreen = () => {
 
   useEffect(() => {
     getInfoEvent();
+  }, []);
+
+  /*===============================================*/
+
+  const getInfoTags = () => {
+    fetch("https://netevent-api.herokuapp.com/api/tags",{
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data1) => {
+        console.log(data1);
+        let i = 0;
+        data1.map(() => {
+          console.log(data1[i].title);
+          i++;
+        });
+        console.log("===STOP===")
+        setData1(data1);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    getInfoTags();
   }, []);
 
   const navigation = useNavigation();
@@ -60,6 +99,16 @@ export default HomeScreen = () => {
     },
     card: {
       flex: 1,
+      marginVertical: 4,
+      marginHorizontal: 16,
+      borderRadius: 5,
+      overflow: "hidden",
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    card1: {
+      flex: 1,
+      height: 300,
       marginVertical: 4,
       marginHorizontal: 16,
       borderRadius: 5,
@@ -93,61 +142,27 @@ export default HomeScreen = () => {
     }
   });
 
-  const images = new Array(6).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
+  const images = new Array(data.length).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
+  console.log(images);
   const mainImage = new Array(1).fill('https://images.unsplash.com/photo-1556740749-887f6717d7e4');
 
-  const scrollX = useRef(new Animated.Value(0)).current;
-
   const { width: windowWidth } = useWindowDimensions();
+
+  var i = -1;
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        horizontal={true}
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={Animated.event([
-          {
-            nativeEvent: {
-              contentOffset: {
-                x: scrollX
-              }
-            }
-          }
-        ])}
-        scrollEventThrottle={1}
-      >
-        {mainImage.map((image, imageIndex) => {
-          return (
-            <View
-              style={{ width: windowWidth}}
-              key={imageIndex}
-            >
-                <ImageBackground source={{ uri: image }} style={styles.card}>
-                    {/* <TouchableOpacity onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                      <View style={styles.textContainer}>
-                      </View>
-                    </TouchableOpacity> */}
-                </ImageBackground>
-            </View>
-          );
-        })}
-      </ScrollView>
-      <Text style={{ color: "black" }}>{ data.title + data.id }</Text>
+      {data1.map(() => {
+            i++;
+            console.log(i);
+      })}
+
+      {/* <Text style={{ color: "black" }}>{{ data[0].eventTags[0].tags.title }}</Text>
       <View style={styles.scrollContainer}>
         <ScrollView
           horizontal={true}
           pagingEnabled
           showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: scrollX
-                }
-              }
-            }
-          ])}
-          scrollEventThrottle={1}
         >
           {images.map((image, imageIndex) => {
             return (
@@ -156,129 +171,15 @@ export default HomeScreen = () => {
                 key={imageIndex}
               >
                   <ImageBackground source={{ uri: image }} style={styles.card}>
-                      <TouchableOpacity onPress={() => navigation.navigate("Event",/* {idEvent: imageIndex}, */ {event : data.event[imageIndex] })}>
-                        <View style={styles.textContainer}>
-                          {/* <Text style={styles.infoText}>
-                            {"Image - " + imageIndex}
-                          </Text> */}
-                          {/* <Button style={styles.button} title="Event" onPress={() => navigation.navigate("Event",{idEvent: imageIndex})} /> */}
-                        </View>
+                      <TouchableOpacity onPress={() => navigation.navigate("Event", {idEvent: data[imageIndex].id})}>
+                        <View style={styles.textContainer}></View>
                       </TouchableOpacity>
                   </ImageBackground>
               </View>
             );
           })}
         </ScrollView>
-      </View>
-      {/* <View
-        style={{
-          height: 300,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text>City Screen</Text>
-        <Button title="City" onPress={() => navigation.navigate("City")} />
-        <Text>Home screen</Text>
-        <Button title="Details" onPress={() => navigation.navigate("Details")} />
-      </View> */}
-      <Text>Category 2</Text>
-      <View style={styles.scrollContainer}>
-        <ScrollView
-          horizontal={true}
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: scrollX
-                }
-              }
-            }
-          ])}
-          scrollEventThrottle={1}
-        >
-          {images.map((image, imageIndex) => {
-            return (
-              <View
-                style={{ width: windowWidth/2}}
-                key={imageIndex}
-              >
-                  <ImageBackground source={{ uri: image }} style={styles.card} onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                      <TouchableOpacity onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                        <View style={styles.textContainer}>
-                          {/* <Text style={styles.infoText}>
-                            {"Image - " + imageIndex}
-                          </Text> */}
-                          {/* <Button style={styles.button} title="Event" onPress={() => navigation.navigate("Event",{idEvent: imageIndex})} /> */}
-                        </View>
-                      </TouchableOpacity>
-                  </ImageBackground>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
-      <Text>Category 3</Text>
-      <View style={styles.scrollContainer}>
-        <ScrollView
-          horizontal={true}
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={Animated.event([
-            {
-              nativeEvent: {
-                contentOffset: {
-                  x: scrollX
-                }
-              }
-            }
-          ])}
-          scrollEventThrottle={1}
-        >
-          {images.map((image, imageIndex) => {
-            return (
-              <View
-                style={{ width: windowWidth/2}}
-                key={imageIndex}
-              >
-                  <ImageBackground source={{ uri: image }} style={styles.card} onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                      <TouchableOpacity onPress={() => navigation.navigate("Event",{idEvent: imageIndex})}>
-                        <View style={styles.textContainer}>
-                          {/* <Text style={styles.infoText}>
-                            {"Image - " + imageIndex}
-                          </Text> */}
-                          {/* <Button style={styles.button} title="Event" onPress={() => navigation.navigate("Event",{idEvent: imageIndex})} /> */}
-                        </View>
-                      </TouchableOpacity>
-                  </ImageBackground>
-              </View>
-            );
-          })}
-        </ScrollView>
-      </View>
+        </View> */}
     </SafeAreaView>
   );
-
-  
-  /* return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "black",
-      }}
-    >
-      <Text>City Screen</Text>
-      <Button title="City" onPress={() => navigation.navigate("City")} />
-      <Text>Home screen</Text>
-      <Button title="Details" onPress={() => navigation.navigate("Details")} />
-      <Button title="Event" onPress={() => navigation.navigate("Event",{
-        idEvent: "1"
-      }
-      )} />
-    </View>
-  ); */
 };
